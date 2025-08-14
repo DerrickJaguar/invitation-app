@@ -12,12 +12,12 @@ export default function InvitationPage() {
       <div className="text-center p-6 bg-white rounded-lg shadow-lg">
         {name ? (
           <h1 className="text-2xl font-bold">
-            🎉 Hello {decodeURIComponent(name)}, you're invited to our event!
-          </h1>
+  🎉 Hello {decodeURIComponent(name)}, you&apos;re invited to our event!
+</h1>
         ) : (
-          <h1 className="text-xl">🎉 You’re invited to our event!</h1>
+          <h1 className="text-xl">🎉 You&apos;re invited to our event!</h1>
         )}
-        <p className="mt-4 text-gray-600">We can’t wait to see you there.</p>
+        <p className="mt-4 text-gray-600">We can&apos;t wait to see you there.</p>
       </div>
 
       {/* Footer */}
