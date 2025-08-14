@@ -8,7 +8,6 @@ export default function CreateInvitation() {
   const [origin, setOrigin] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  // Only access browser-specific window after mount
   useEffect(() => {
     setOrigin(window.location.origin);
   }, []);
@@ -16,16 +15,15 @@ export default function CreateInvitation() {
   const generateLink = () => {
     if (!name.trim() || !origin) return;
 
-    setLink(`${origin}/invite?name=${encodeURIComponent(name.trim())}`);
+    setLink(`${origin}/invite/${encodeURIComponent(name.trim())}`);
     setCopied(false);
   };
 
-  // Prevent hydration mismatch by waiting for origin
   if (!origin) return null;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-      <h1 className="text-2xl font-bold mb-4">Invitation Link Generation</h1>
+      <h1 className="text-2xl font-bold mb-4">Invitation Link Generator</h1>
 
       <input
         type="text"
