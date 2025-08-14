@@ -21,7 +21,7 @@ export default function InvitePage({ params }: InvitePageProps) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-      <h1 className="text-3xl font-bold mb-4">You're Invited, {guestName}!</h1>
+      <h1 className="text-3xl font-bold mb-4">You are Invited, {guestName}!</h1>
       <p className="mb-4">We are excited to have you join us.</p>
 
       <footer className="mt-8 text-sm text-gray-500">
