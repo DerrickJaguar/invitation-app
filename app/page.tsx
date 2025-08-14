@@ -5,6 +5,7 @@ export default function CreateInvitation() {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [origin, setOrigin] = useState("");
+  const [copied, setCopied] = useState(false);
 
   // Set origin only after the component mounts (client-side)
   useEffect(() => {
@@ -17,8 +18,16 @@ export default function CreateInvitation() {
       return;
     }
 
-    const encodedName = encodeURIComponent(name.trim());
-    setLink(`${origin}/invite?name=${encodedName}`);
+    setLink(`${origin}/invite?name=${encodeURIComponent(name.trim())}`);
+    setCopied(false); // Reset copied state
+  };
+
+  const copyToClipboard = async () => {
+    if (link) {
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset after 2s
+    }
   };
 
   return (
@@ -36,24 +45,43 @@ export default function CreateInvitation() {
       <button
         onClick={generateLink}
         className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
-        disabled={!origin} // Disable button until origin is set
+        disabled={!origin} // Disable until origin is set
       >
         Generate Link
       </button>
 
       {link && (
-        <div className="mt-6 p-4 bg-white border rounded-lg shadow-md max-w-md break-words">
+        <div className="mt-6 p-4 bg-white border rounded-lg shadow-md max-w-md break-words flex flex-col items-center">
           <p className="text-sm mb-2">Copy and send this link:</p>
           <a
             href={link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-500 underline"
+            className="text-blue-500 underline mb-2"
           >
             {link}
           </a>
+          <button
+            onClick={copyToClipboard}
+            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+          >
+            {copied ? "Copied!" : "Copy Link"}
+          </button>
         </div>
       )}
+
+      {/* Footer */}
+      <footer className="mt-8 text-sm text-gray-500">
+        Built by{" "}
+        <a
+          href="https://github.com/DerrickJaguar"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          Derrick Ngabirano
+        </a>
+      </footer>
     </div>
   );
 }
