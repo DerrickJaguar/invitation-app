@@ -1,38 +1,31 @@
 "use client";
+
 import { useState, useEffect } from "react";
 
 export default function CreateInvitation() {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
-  const [origin, setOrigin] = useState("");
+  const [origin, setOrigin] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  // Set origin only after the component mounts (client-side)
+  // Only access browser-specific window after mount
   useEffect(() => {
     setOrigin(window.location.origin);
   }, []);
 
   const generateLink = () => {
-    if (!name.trim()) {
-      alert("Please enter a name");
-      return;
-    }
+    if (!name.trim() || !origin) return;
 
     setLink(`${origin}/invite?name=${encodeURIComponent(name.trim())}`);
-    setCopied(false); // Reset copied state
+    setCopied(false);
   };
 
-  const copyToClipboard = async () => {
-    if (link) {
-      await navigator.clipboard.writeText(link);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // Reset after 2s
-    }
-  };
+  // Prevent hydration mismatch by waiting for origin
+  if (!origin) return null;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
-      <h1 className="text-2xl font-bold mb-4">Invitation Link Generator</h1>
+      <h1 className="text-2xl font-bold mb-4">Invitation Link Generation</h1>
 
       <input
         type="text"
@@ -45,7 +38,6 @@ export default function CreateInvitation() {
       <button
         onClick={generateLink}
         className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
-        disabled={!origin} // Disable until origin is set
       >
         Generate Link
       </button>
@@ -62,7 +54,11 @@ export default function CreateInvitation() {
             {link}
           </a>
           <button
-            onClick={copyToClipboard}
+            onClick={async () => {
+              await navigator.clipboard.writeText(link);
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            }}
             className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
           >
             {copied ? "Copied!" : "Copy Link"}
@@ -70,7 +66,6 @@ export default function CreateInvitation() {
         </div>
       )}
 
-      {/* Footer */}
       <footer className="mt-8 text-sm text-gray-500">
         Built by{" "}
         <a
